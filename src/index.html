@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexOS · DataCo Workstation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="login-screen">
+  <div id="login-card">
+    <div class="brand">NexOS</div>
+    <div class="tagline">DataCo Career Simulator</div>
+
+    <div id="lang-switch"></div>
+
+    <div id="login-view-menu">
+      <button class="login-btn" id="btn-new-career" data-i18n="login.new">🆕 Новая карьера</button>
+      <button class="login-btn" id="btn-load-career" data-i18n="login.load">📂 Продолжить карьеру</button>
+      <button class="login-btn" id="btn-exit" data-i18n="login.exit">🚪 Выход</button>
+      <div id="storage-tier-note" style="font-size:10.5px;color:#7d879c;text-align:center;margin-top:4px;"></div>
+    </div>
+
+    <div id="login-view-new" style="display:none;">
+      <input type="text" id="new-name-input" data-i18n-ph="login.namePlaceholder" placeholder="Как тебя зовут?" maxlength="24">
+      <div id="prof-cards"></div>
+      <button class="login-btn" id="btn-confirm-new" data-i18n="login.start" style="background:var(--accent);border-color:var(--accent);justify-content:center;">Начать карьеру</button>
+      <button class="login-back" id="btn-back-from-new" data-i18n="login.back">← Назад</button>
+    </div>
+
+    <div id="login-view-load" style="display:none;">
+      <div id="load-list"></div>
+      <button class="login-back" id="btn-back-from-load" data-i18n="login.back">← Назад</button>
+    </div>
+
+    <div id="login-view-exit" style="display:none;">
+      <div class="login-empty" data-i18n="login.bye">👋 До встречи! Прогресс уже сохранён — можешь закрыть эту вкладку в любой момент.</div>
+      <button class="login-back" id="btn-back-from-exit" data-i18n="login.back">← Назад</button>
+    </div>
+  </div>
+</div>
+
+<div id="boot" class="hidden">
+  <div class="logo">NexOS</div>
+  <div class="dots"><span data-i18n="boot.loading">Загрузка DataCo Workstation</span><span>.</span><span>.</span><span>.</span></div>
+</div>
+
+<div id="desktop">
+  <div id="icons">
+    <div class="desktop-icon" data-app="chat" tabindex="0"><div class="glyph">💬</div><div class="label">PulseChat</div></div>
+    <div class="desktop-icon" data-app="mail" tabindex="0"><div class="glyph">✉️</div><div class="label">InboxPro</div></div>
+    <div class="desktop-icon" data-app="qb" tabindex="0"><div class="glyph">🗄️</div><div class="label">QueryBench</div></div>
+    <div class="desktop-icon" data-app="chart" tabindex="0"><div class="glyph">📈</div><div class="label">ChartLab</div></div>
+    <div class="desktop-icon" data-app="tasks" tabindex="0"><div class="glyph">📋</div><div class="label">TaskBoard</div></div>
+    <div class="desktop-icon" data-app="files" tabindex="0"><div class="glyph">🗂️</div><div class="label">FileDock</div></div>
+    <div class="desktop-icon" data-app="ref" tabindex="0"><div class="glyph">📚</div><div class="label" data-i18n="icon.ref">Справочник</div></div>
+    <div class="desktop-icon" data-app="shop" tabindex="0"><div class="glyph">🛒</div><div class="label">NexMart</div></div>
+  </div>
+</div>
+
+<div id="taskbar">
+  <button id="start-btn" data-i18n="menu.start">▦ Меню</button>
+  <div id="running-apps"></div>
+  <div id="tray">
+    <div class="tray-icon" id="dash-icon">👤<span class="tray-badge" id="rep-badge" style="display:none"></span></div>
+    <div id="clock">--:--</div>
+  </div>
+</div>
+
+<div id="start-menu">
+  <button id="menu-chat">💬 PulseChat</button>
+  <button id="menu-mail">✉️ InboxPro</button>
+  <button id="menu-qb">🗄️ QueryBench</button>
+  <button id="menu-chart">📈 ChartLab</button>
+  <button id="menu-tasks">📋 TaskBoard</button>
+  <button id="menu-files">🗂️ FileDock</button>
+  <button id="menu-ref" data-i18n="menu.ref">📚 SQL-справочник</button>
+  <button id="menu-shop">🛒 NexMart</button>
+  <button id="menu-profile" data-i18n="menu.profile">👤 Профиль</button>
+  <div class="divider"></div>
+  <button id="menu-sandbox" data-i18n="menu.sandbox">🧪 Песочница</button>
+  <button id="menu-endshift" data-i18n="menu.endshift">🌙 Закончить смену</button>
+  <button id="menu-save" data-i18n="menu.save">💾 Сохранить сейчас</button>
+  <button id="menu-logout" data-i18n="menu.logout">🔓 Выйти из карьеры</button>
+</div>
+
+<div id="dashboard-pop">
+  <h3 id="dash-name">Профиль сотрудника</h3>
+  <div id="dash-profession"></div>
+  <div class="dash-level" id="dash-level">Junior Analyst</div>
+  <div class="dash-row"><span class="name" data-i18n="dash.reputation">Репутация</span><div class="meter"><div class="meter-fill" id="meter-rep" style="background:var(--accent)"></div></div><span id="dash-rep">10</span></div>
+  <div class="dash-row"><span class="name" data-i18n="dash.energy">Энергия</span><div class="meter"><div class="meter-fill" id="meter-energy" style="background:var(--good)"></div></div><span id="dash-energy">100%</span></div>
+  <div class="dash-row"><span class="name" data-i18n="dash.balance">Баланс</span><span id="dash-money" style="margin-left:auto;">$500</span></div>
+  <div class="dash-sep"></div>
+  <div class="dash-row"><span class="name" data-i18n="dash.salary">Оклад</span><span id="dash-salary" style="margin-left:auto;">$900 / мес</span></div>
+  <div class="dash-row"><span class="name" data-i18n="dash.bonus">Премия к выплате</span><span id="dash-bonus" style="margin-left:auto;">$0</span></div>
+  <div class="dash-row"><span class="name" data-i18n="dash.payday">Зарплата через</span><span id="dash-payday" style="margin-left:auto;">21 дн.</span></div>
+  <div class="dash-sep"></div>
+  <div class="dash-row"><span class="name" data-i18n="dash.day">День</span><span id="dash-day" style="margin-left:auto;">1</span></div>
+  <div class="dash-row" style="margin-bottom:0;"><span class="name" data-i18n="dash.storage">Сохранение</span><span id="dash-storage" style="margin-left:auto;font-size:10.5px;"></span></div>
+  <button id="dash-more" data-i18n="dash.openProfile">Открыть профиль →</button>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script src="js/00-helpers.js"></script>
+<script src="js/05-i18n.js"></script>
+<script src="js/06-vocab.js"></script>
+<script src="js/10-sql-engine.js"></script>
+<script src="js/20-validate.js"></script>
+<script src="js/30-contacts.js"></script>
+<script src="js/39-quest-text.js"></script>
+<script src="js/40-quests.js"></script>
+<script src="js/41-quests-judgment.js"></script>
+<script src="js/42-quests-analysis.js"></script>
+<script src="js/43-quests-chart.js"></script>
+<script src="js/44-quests-cleaning.js"></script>
+<script src="js/45-sandbox.js"></script>
+<script src="js/50-hints-topics.js"></script>
+<script src="js/55-narrative.js"></script>
+<script src="js/60-state.js"></script>
+<script src="js/65-persistence.js"></script>
+<script src="js/70-shell.js"></script>
+<script src="js/72-refresh-bus.js"></script>
+<script src="js/75-apps-chat-mail.js"></script>
+<script src="js/80-app-files.js"></script>
+<script src="js/82-app-tasks.js"></script>
+<script src="js/84-app-shop.js"></script>
+<script src="js/86-app-reference.js"></script>
+<script src="js/88-app-profile.js"></script>
+<script src="js/89-workspace-chart.js"></script>
+<script src="js/90-app-querybench.js"></script>
+<script src="js/91-workspace-choice.js"></script>
+<script src="js/92-quest-lifecycle.js"></script>
+<script src="js/93-task-types.js"></script>
+<script src="js/94-render-dispatch.js"></script>
+<script src="js/96-login.js"></script>
+<script src="js/99-boot.js"></script>
+</body>
+</html>
