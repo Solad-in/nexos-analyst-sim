@@ -1123,6 +1123,10 @@ function applyStaticText(){
   document.querySelectorAll('.taskbar-app').forEach(el=>{
     el.textContent=APP_META[el.dataset.app].icon+' '+appTitle(el.dataset.app);
   });
+  // Заметка про хранилище зависит от того, какой уровень доступен, — ключа в разметке
+  // для неё нет, поэтому обновляется здесь же.
+  const note=$('storage-tier-note');
+  if(note) note.textContent=storageTierNote();
   document.documentElement.lang=locale;
 }
 function setLocale(code){
@@ -1132,7 +1136,7 @@ function setLocale(code){
   applyContactLocale();
   applyStaticText();
   renderLangSwitch();
-  if(career.slug) refresh();
+  if(career.slug) refresh(); else refreshLoginScreen();
 }
 function renderLangSwitch(){
   const box=$('lang-switch');
@@ -5747,6 +5751,14 @@ function renderApp(app){
 function showLoginView(view){
   ['menu','new','load','exit'].forEach(v=>{ $('login-view-'+v).style.display = (v===view?'block':'none'); });
 }
+// Экран входа живёт вне шины перерисовки: карьеры ещё нет, значит refresh() не зовётся.
+// Его динамические части — карточки профессий и список сохранений — рисуются по клику
+// и при смене языка остались бы на старом. Вызывается из setLocale().
+function refreshLoginScreen(){
+  if($('login-screen').style.display==='none') return;
+  if($('login-view-new').style.display!=='none') renderProfCards();
+  if($('login-view-load').style.display!=='none') renderLoadList();
+}
 function renderProfCards(){
   const el=$('prof-cards');
   el.innerHTML=PROFESSIONS.map(p=>`
@@ -5928,8 +5940,7 @@ function tickClock(){
   $('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
 tickClock(); setInterval(tickClock, 15000);
-initLocale();     // до первой отрисовки: подписи в разметке заполняются отсюда
-$('storage-tier-note').textContent=storageTierNote();
+initLocale();     // до первой отрисовки: подписи в разметке (и заметка про хранилище) — отсюда
 
 // Everything lives in a closure, so this is the only way to exercise the SQL engine and the
 // quest generators from the console (or an automated check) without shipping a second copy.

@@ -538,6 +538,10 @@ function applyStaticText(){
   document.querySelectorAll('.taskbar-app').forEach(el=>{
     el.textContent=APP_META[el.dataset.app].icon+' '+appTitle(el.dataset.app);
   });
+  // Заметка про хранилище зависит от того, какой уровень доступен, — ключа в разметке
+  // для неё нет, поэтому обновляется здесь же.
+  const note=$('storage-tier-note');
+  if(note) note.textContent=storageTierNote();
   document.documentElement.lang=locale;
 }
 function setLocale(code){
@@ -547,7 +551,7 @@ function setLocale(code){
   applyContactLocale();
   applyStaticText();
   renderLangSwitch();
-  if(career.slug) refresh();
+  if(career.slug) refresh(); else refreshLoginScreen();
 }
 function renderLangSwitch(){
   const box=$('lang-switch');

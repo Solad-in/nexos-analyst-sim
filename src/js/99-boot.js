@@ -76,8 +76,7 @@ function tickClock(){
   $('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
 tickClock(); setInterval(tickClock, 15000);
-initLocale();     // до первой отрисовки: подписи в разметке заполняются отсюда
-$('storage-tier-note').textContent=storageTierNote();
+initLocale();     // до первой отрисовки: подписи в разметке (и заметка про хранилище) — отсюда
 
 // Everything lives in a closure, so this is the only way to exercise the SQL engine and the
 // quest generators from the console (or an automated check) without shipping a second copy.

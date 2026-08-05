@@ -3,6 +3,14 @@
 function showLoginView(view){
   ['menu','new','load','exit'].forEach(v=>{ $('login-view-'+v).style.display = (v===view?'block':'none'); });
 }
+// Экран входа живёт вне шины перерисовки: карьеры ещё нет, значит refresh() не зовётся.
+// Его динамические части — карточки профессий и список сохранений — рисуются по клику
+// и при смене языка остались бы на старом. Вызывается из setLocale().
+function refreshLoginScreen(){
+  if($('login-screen').style.display==='none') return;
+  if($('login-view-new').style.display!=='none') renderProfCards();
+  if($('login-view-load').style.display!=='none') renderLoadList();
+}
 function renderProfCards(){
   const el=$('prof-cards');
   el.innerHTML=PROFESSIONS.map(p=>`
